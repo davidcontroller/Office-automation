@@ -1,0 +1,21 @@
+import numpy as np
+import pandas as pd
+from pandas import Series, DataFrame
+
+loc = '(...)'
+
+df = pd.read_excel(r'(...)\testpyprod.xlsx', header = 1)
+
+df['Coeff_var'] = df.groupby(['Prodotto'])[['Costo unitario']].transform('std') / df.groupby(['Prodotto'])[['Costo unitario']].transform('mean')
+
+df = df.sort_values(by=['Coeff_var'], ascending=False)
+
+int_df = df[['Prodotto','Coeff_var']]
+
+int_df = int_df.drop_duplicates(['Prodotto'])
+
+int_df = int_df[['Prodotto','Coeff_var']]
+
+submission = pd.DataFrame(int_df)
+
+submission.to_csv(loc + "coeff_var.csv", index=False)
